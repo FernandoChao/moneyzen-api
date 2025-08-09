@@ -7,6 +7,18 @@ import os, json, datetime
 
 app = FastAPI()
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],      # luego lo restringimos a tu dominio/app
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 # Variables de entorno:
 # MONGO_URI: cadena de conexión de MongoDB Atlas
 # FIREBASE_SERVICE_ACCOUNT: contenido JSON de la cuenta de servicio Firebase
