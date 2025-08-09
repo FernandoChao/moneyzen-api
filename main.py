@@ -100,3 +100,22 @@ async def tx_create(req: Request):
     col_summaries.update_one({"uid": uid, "month": key}, {"$set": summary}, upsert=True)
 
     return JSONResponse({"ok": True, "txId": tx_id})
+
+
+# --- TEST: conexión a MongoDB ---
+import os
+from pymongo import MongoClient
+
+@app.get("/health-db")
+def health_db():
+    try:
+        mongo_uri = os.environ.get("MONGO_URI")
+        if not mongo_uri:
+            return {"ok": False, "error": "MONGO_URI no está definida"}
+
+        client = MongoClient(mongo_uri, serverSelectionTimeoutMS=3000)
+        # Fuerza un ping al cluster
+        client.admin.command("ping")
+        return {"ok": True}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
